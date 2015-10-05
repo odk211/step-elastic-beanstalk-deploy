@@ -64,6 +64,7 @@ cat <<EOT > $AWSEB_CREDENTIAL_FILE
 AWSAccessKeyId=$WERCKER_ELASTIC_BEANSTALK_DEPLOY_KEY
 AWSSecretKey=$WERCKER_ELASTIC_BEANSTALK_DEPLOY_SECRET
 EOT
+export AWS_CREDENTIAL_FILE=$AWSEB_CREDENTIAL_FILE
 
 debug "Setting up eb config..."
 cat <<EOF > $AWSEB_EB_CONFIG_FILE
@@ -87,23 +88,22 @@ then
     cat $AWSEB_EB_CONFIG_FILE
 fi
 
+/usr/local/bin/eb use $WERCKER_ELASTIC_BEANSTALK_DEPLOY_ENV_NAME || fail "EB is not working or is not set up correctly."
+
 cat <<EOF
 ====================================================================================================
 $(pwd)
+--
 $(cat $AWSEB_CREDENTIAL_FILE)
+--
 $(cat $AWSEB_EB_CONFIG_FILE)
+--
 $(ls -ltra)
 ====================================================================================================
 EOF
 
-#/usr/local/bin/eb use $WERCKER_ELASTIC_BEANSTALK_DEPLOY_ENV_NAME || fail "EB is not working or is not set up correctly."
-
 debug "Checking if eb exists and can connect."
-/usr/local/bin/eb status
-if [ $? -ne "0" ]
-then
-    fail "EB is not working or is not set up correctly."
-fi
+/usr/local/bin/eb status || fail "EB is not working or is not set up correctly."
 
 debug "Pushing to AWS eb servers."
 /usr/local/bin/eb deploy || true # catach timeout
