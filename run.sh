@@ -33,11 +33,16 @@ then
     warn "Debug mode turned on, this can dump potentially dangerous information to log files."
 fi
 
+echo "Printenv..."
+env
+
 echo 'Synchronizing References in apt-get...'
 sudo apt-get update
 
 echo 'Installing pip...'
 sudo apt-get install -y python-pip libpython-all-dev
+
+echo 'Installing awscli...'
 sudo pip install awsebcli
 
 mkdir -p "$HOME/.aws"
@@ -66,16 +71,16 @@ then
     cat $AWSEB_EB_CONFIG_FILE
 fi
 
-eb use $WERCKER_ELASTIC_BEANSTALK_DEPLOY_ENV_NAME || fail "EB is not working or is not set up correctly."
+/usr/local/bin/eb use $WERCKER_ELASTIC_BEANSTALK_DEPLOY_ENV_NAME || fail "EB is not working or is not set up correctly."
 
 debug "Checking if eb exists and can connect."
-eb status
+/usr/local/bin/eb status
 if [ $? -ne "0" ]
 then
     fail "EB is not working or is not set up correctly."
 fi
 
 debug "Pushing to AWS eb servers."
-eb deploy || true # catach timeout
+/usr/local/bin/eb deploy || true # catach timeout
 
 success 'Successfully pushed to Amazon Elastic Beanstalk'
