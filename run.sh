@@ -58,11 +58,27 @@ cd $WERCKER_SOURCE_DIR
 AWSEB_CREDENTIAL_FILE="$HOME/.elasticbeanstalk/aws_credential_file"
 AWSEB_EB_CONFIG_FILE="$WERCKER_SOURCE_DIR/.elasticbeanstalk/config.yml"
 
-debug "Setting up credentials."
-cat <<EOT >> $AWSEB_CREDENTIAL_FILE
+debug "Setting up credentials..."
+test -d $(dirname $AWSEB_CREDENTIAL_FILE) || mkdir $(dirname $AWSEB_CREDENTIAL_FILE)
+cat <<EOT > $AWSEB_CREDENTIAL_FILE
 AWSAccessKeyId=$WERCKER_ELASTIC_BEANSTALK_DEPLOY_KEY
 AWSSecretKey=$WERCKER_ELASTIC_BEANSTALK_DEPLOY_SECRET
 EOT
+
+debug "Setting up eb config..."
+cat <<EOF > $AWSEB_EB_CONFIG_FILE
+branch-defaults:
+  default:
+    environment: $WERCKER_ELASTIC_BEANSTALK_DEPLOY_ENV_NAME
+  $WERCKER_GIT_BRANCH:
+    environment: $WERCKER_ELASTIC_BEANSTALK_DEPLOY_ENV_NAME
+global:
+  application_name: $WERCKER_ELASTIC_BEANSTALK_DEPLOY_APP_NAME
+  default_platform: Ruby 2.2 (Puma)
+  default_region: $WERCKER_ELASTIC_BEANSTALK_DEPLOY_REGION
+  profile: null
+  sc: git
+EOF
 
 if [ -n "$WERCKER_ELASTIC_BEANSTALK_DEPLOY_DEBUG" ]
 then
@@ -80,7 +96,7 @@ $(ls -ltra)
 ====================================================================================================
 EOF
 
-/usr/local/bin/eb use $WERCKER_ELASTIC_BEANSTALK_DEPLOY_ENV_NAME || fail "EB is not working or is not set up correctly."
+#/usr/local/bin/eb use $WERCKER_ELASTIC_BEANSTALK_DEPLOY_ENV_NAME || fail "EB is not working or is not set up correctly."
 
 debug "Checking if eb exists and can connect."
 /usr/local/bin/eb status
