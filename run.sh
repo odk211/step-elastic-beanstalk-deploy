@@ -33,6 +33,10 @@ then
     warn "Debug mode turned on, this can dump potentially dangerous information to log files."
 fi
 
+export AWS_CREDENTIAL_FILE=$AWSEB_CREDENTIAL_FILE
+export AWS_ACCESS_KEY_ID=$WERCKER_ELASTIC_BEANSTALK_DEPLOY_KEY
+export AWS_SECRET_ACCESS_KEY=$WERCKER_ELASTIC_BEANSTALK_DEPLOY_SECRET
+
 echo "Printenv..."
 env
 
@@ -64,7 +68,6 @@ cat <<EOT > $AWSEB_CREDENTIAL_FILE
 AWSAccessKeyId=$WERCKER_ELASTIC_BEANSTALK_DEPLOY_KEY
 AWSSecretKey=$WERCKER_ELASTIC_BEANSTALK_DEPLOY_SECRET
 EOT
-export AWS_CREDENTIAL_FILE=$AWSEB_CREDENTIAL_FILE
 
 debug "Setting up eb config..."
 cat <<EOF > $AWSEB_EB_CONFIG_FILE
