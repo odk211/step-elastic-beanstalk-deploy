@@ -33,6 +33,9 @@ then
     warn "Debug mode turned on, this can dump potentially dangerous information to log files."
 fi
 
+AWSEB_CREDENTIAL_FILE="$HOME/.elasticbeanstalk/aws_credential_file"
+AWSEB_EB_CONFIG_FILE="$WERCKER_SOURCE_DIR/.elasticbeanstalk/config.yml"
+
 export AWS_CREDENTIAL_FILE=$AWSEB_CREDENTIAL_FILE
 export AWS_ACCESS_KEY_ID=$WERCKER_ELASTIC_BEANSTALK_DEPLOY_KEY
 export AWS_SECRET_ACCESS_KEY=$WERCKER_ELASTIC_BEANSTALK_DEPLOY_SECRET
@@ -49,18 +52,13 @@ sudo apt-get install -y python-pip libpython-all-dev
 echo 'Installing awscli...'
 sudo pip install awsebcli
 
-mkdir -p "$HOME/.aws"
-mkdir -p "$WERCKER_SOURCE_DIR/.elasticbeanstalk/"
-if [ $? -ne "0" ]
-then
-    fail "Unable to make directory.";
-fi
+echo 'eb version show...'
+eb --version
 
-debug "Change back to the source dir.";
+test -d "$WERCKER_SOURCE_DIR/.elasticbeanstalk/" || mkdir -p "$WERCKER_SOURCE_DIR/.elasticbeanstalk/" || fail "Unable to make directory."
+
+debug "Change back to the source dir."
 cd $WERCKER_SOURCE_DIR
-
-AWSEB_CREDENTIAL_FILE="$HOME/.elasticbeanstalk/aws_credential_file"
-AWSEB_EB_CONFIG_FILE="$WERCKER_SOURCE_DIR/.elasticbeanstalk/config.yml"
 
 debug "Setting up credentials..."
 test -d $(dirname $AWSEB_CREDENTIAL_FILE) || mkdir $(dirname $AWSEB_CREDENTIAL_FILE)
@@ -92,18 +90,6 @@ then
 fi
 
 /usr/local/bin/eb use $WERCKER_ELASTIC_BEANSTALK_DEPLOY_ENV_NAME || fail "EB is not working or is not set up correctly."
-
-cat <<EOF
-====================================================================================================
-$(pwd)
---
-$(cat $AWSEB_CREDENTIAL_FILE)
---
-$(cat $AWSEB_EB_CONFIG_FILE)
---
-$(ls -ltra)
-====================================================================================================
-EOF
 
 debug "Checking if eb exists and can connect."
 /usr/local/bin/eb status || fail "EB is not working or is not set up correctly."
