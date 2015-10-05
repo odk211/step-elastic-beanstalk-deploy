@@ -71,6 +71,13 @@ then
     cat $AWSEB_EB_CONFIG_FILE
 fi
 
+cat <<EOF
+====================================================================================================
+$(pwd)
+ls -ltra
+====================================================================================================
+EOF
+
 /usr/local/bin/eb use $WERCKER_ELASTIC_BEANSTALK_DEPLOY_ENV_NAME || fail "EB is not working or is not set up correctly."
 
 debug "Checking if eb exists and can connect."
