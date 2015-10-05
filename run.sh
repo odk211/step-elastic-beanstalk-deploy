@@ -37,7 +37,8 @@ echo 'Synchronizing References in apt-get...'
 sudo apt-get update
 
 echo 'Installing pip...'
-sudo apt-get install -y python-pip awsebcli
+sudo apt-get install -y python-pip
+sudo pip install awsebcli
 
 mkdir -p "$HOME/.aws"
 mkdir -p "$WERCKER_SOURCE_DIR/.elasticbeanstalk/"
