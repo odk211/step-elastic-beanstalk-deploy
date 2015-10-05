@@ -37,7 +37,7 @@ echo 'Synchronizing References in apt-get...'
 sudo apt-get update
 
 echo 'Installing pip...'
-sudo apt-get install -y python-pip
+sudo apt-get install -y python-pip libpython-all-dev
 sudo pip install awsebcli
 
 mkdir -p "$HOME/.aws"
