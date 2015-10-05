@@ -55,7 +55,7 @@ fi
 debug "Change back to the source dir.";
 cd $WERCKER_SOURCE_DIR
 
-AWSEB_CREDENTIAL_FILE="$HOME/.aws/aws_credential_file"
+AWSEB_CREDENTIAL_FILE="$HOME/.elasticbeanstalk/aws_credential_file"
 AWSEB_EB_CONFIG_FILE="$WERCKER_SOURCE_DIR/.elasticbeanstalk/config.yml"
 
 debug "Setting up credentials."
@@ -74,6 +74,8 @@ fi
 cat <<EOF
 ====================================================================================================
 $(pwd)
+$(cat $AWSEB_CREDENTIAL_FILE)
+$(cat $AWSEB_EB_CONFIG_FILE)
 $(ls -ltra)
 ====================================================================================================
 EOF
