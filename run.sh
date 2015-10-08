@@ -95,6 +95,6 @@ debug "Checking if eb exists and can connect."
 /usr/local/bin/eb status || fail "EB is not working or is not set up correctly."
 
 debug "Pushing to AWS eb servers."
-/usr/local/bin/eb deploy || true # catach timeout
+nohup /usr/local/bin/eb deploy &
 
 success 'Successfully pushed to Amazon Elastic Beanstalk'
