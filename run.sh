@@ -1,7 +1,7 @@
 #!/bin/bash
 set +e
 
-cd $HOME
+cd "$HOME"
 if [ ! -n "$WERCKER_ELASTIC_BEANSTALK_DEPLOY_APP_NAME" ]
 then
     fail "Missing or empty option APP_NAME, please check wercker.yml"
@@ -58,10 +58,10 @@ eb --version
 test -d "$WERCKER_SOURCE_DIR/.elasticbeanstalk/" || mkdir -p "$WERCKER_SOURCE_DIR/.elasticbeanstalk/" || fail "Unable to make directory."
 
 debug "Change back to the source dir."
-cd $WERCKER_SOURCE_DIR
+cd "$WERCKER_SOURCE_DIR"
 
 debug "Setting up credentials..."
-test -d $(dirname $AWSEB_CREDENTIAL_FILE) || mkdir $(dirname $AWSEB_CREDENTIAL_FILE)
+test -d "$(dirname "$AWSEB_CREDENTIAL_FILE")" || mkdir "$(dirname "$AWSEB_CREDENTIAL_FILE")"
 cat <<EOT > $AWSEB_CREDENTIAL_FILE
 AWSAccessKeyId=$WERCKER_ELASTIC_BEANSTALK_DEPLOY_KEY
 AWSSecretKey=$WERCKER_ELASTIC_BEANSTALK_DEPLOY_SECRET
@@ -85,11 +85,11 @@ EOF
 if [ -n "$WERCKER_ELASTIC_BEANSTALK_DEPLOY_DEBUG" ]
 then
     debug "Dumping config file."
-    cat $AWSEB_CREDENTIAL_FILE
-    cat $AWSEB_EB_CONFIG_FILE
+    cat "$AWSEB_CREDENTIAL_FILE"
+    cat "$AWSEB_EB_CONFIG_FILE"
 fi
 
-/usr/local/bin/eb use $WERCKER_ELASTIC_BEANSTALK_DEPLOY_ENV_NAME || fail "EB is not working or is not set up correctly."
+/usr/local/bin/eb use "$WERCKER_ELASTIC_BEANSTALK_DEPLOY_ENV_NAME" || fail "EB is not working or is not set up correctly."
 
 debug "Checking if eb exists and can connect."
 /usr/local/bin/eb status || fail "EB is not working or is not set up correctly."
