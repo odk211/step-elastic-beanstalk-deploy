@@ -76,7 +76,7 @@ branch-defaults:
     environment: $WERCKER_ELASTIC_BEANSTALK_DEPLOY_ENV_NAME
 global:
   application_name: $WERCKER_ELASTIC_BEANSTALK_DEPLOY_APP_NAME
-  default_platform: Ruby 2.2 (Puma)
+  default_platform: null
   default_region: $WERCKER_ELASTIC_BEANSTALK_DEPLOY_REGION
   profile: null
   sc: git
