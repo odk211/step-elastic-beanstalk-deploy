@@ -1,7 +1,6 @@
 #Amazon EB deployment for Wercker.com
 
-
-[![wercker status](https://app.wercker.com/status/ff5cec33194ea3c318288128f970c134/m "wercker status")](https://app.wercker.com/project/bykey/ff5cec33194ea3c318288128f970c134)
+[![wercker status](https://app.wercker.com/status/3ea4d8e8027efa1900e1bbb00280d0a2/m "wercker status")](https://app.wercker.com/project/bykey/3ea4d8e8027efa1900e1bbb00280d0a2)
 
 > Please note: This requires you to have an already existing Elastic Beanstalk application and environment in place, it will not run a startup procedure.
 
@@ -16,7 +15,7 @@
 ```yml
 deploy:
     steps:
-        - hotakasaito/elastic-beanstalk-deploy:
+        - odk211/elastic-beanstalk-deploy:
             key: $AMAZON_KEY
             secret: $AMAZON_SECRET_KEY
             app_name: My Application
