@@ -10,6 +10,7 @@
 * `app_name` (required) Name of the application.
 * `env_name` (required) Name of the application environment you wish to deploy to.
 * `region` (optional) Region that your elastic beanstalk instance lives in, defaults to us-west-2.
+* `label` (optional) Label name which version will be given
 
 
 ```yml
@@ -21,4 +22,5 @@ deploy:
             app_name: My Application
             env_name: production
             region: us-west-2
+            label: $WERCKER_GIT_COMMIT
 ```

@@ -1,6 +1,8 @@
 #!/bin/bash
 set +e
 
+local args=()
+
 cd "$HOME"
 if [ ! -n "$WERCKER_ELASTIC_BEANSTALK_DEPLOY_APP_NAME" ]
 then
@@ -31,6 +33,11 @@ fi
 if [ -n "$WERCKER_ELASTIC_BEANSTALK_DEPLOY_DEBUG" ]
 then
     warn "Debug mode turned on, this can dump potentially dangerous information to log files."
+fi
+
+if [ -n "$WERCKER_ELASTIC_BEANSTALK_DEPLOY_LABEL" ]
+then
+    args+="--label=$WERCKER_ELASTIC_BEANSTALK_DEPLOY_LABEL"
 fi
 
 AWSEB_CREDENTIAL_FILE="$HOME/.elasticbeanstalk/aws_credential_file"
@@ -95,6 +102,7 @@ debug "Checking if eb exists and can connect."
 /usr/local/bin/eb status || fail "EB is not working or is not set up correctly."
 
 debug "Pushing to AWS eb servers."
-nohup /usr/local/bin/eb deploy &
+debug "eb deploy ${args[*]}"
+nohup /usr/local/bin/eb deploy "${args[@]}" &
 
 success 'Successfully pushed to Amazon Elastic Beanstalk'
